@@ -16,9 +16,10 @@ export function toHoursMinutesSeconds(seconds) {
     return (`${hrs}:${mins}:${secs}`);
 };
 
-export function handleStartTimer(intervalInUse, setIntervalInUse) {
+export function handleStartTimer(intervalInUse, setIntervalInUse, setClockStart) {
     if (!intervalInUse) {
         setIntervalInUse(true);
+        setClockStart(Date.now());
     }
     else {
         return;
@@ -31,12 +32,20 @@ export function handleStopTimer(intervalInUse, setIntervalInUse) {
     }
 };
 
-export function handleResetTimer(setTime) {
+export function handleResetTimer(setTime, setClockStart, setLapTimeList) {
     setTime(0);
+    setClockStart(0);
+    setLapTimeList([]);
 };
 
-export function handleLapTime(lapTime, setLapTime) {
-    let lap = Date.now() - lapTime;
-    setLapTime(lap);
-    console.log(lapTime);
+export function handleLapTime(intervalInUse, clockStart, setClockStart, lapTimeList, setLapTimeList) {
+    if (intervalInUse && clockStart !== 0) {
+        let lap = Math.round(((Date.now() - clockStart) / 1000)); //Rounding to nearest second.
+        setClockStart(Date.now());
+        setLapTimeList(lapTimeList => [...lapTimeList, lap]);
+    } else if (intervalInUse && clockStart === 0) {
+        return;
+    };
 };
+
+export function handleSave() {};
