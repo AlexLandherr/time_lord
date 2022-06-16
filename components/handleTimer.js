@@ -52,5 +52,3 @@ export function handleLapTime(intervalInUse, clockStart, setClockStart, setLapTi
         return;
     };
 };
-
-export function handleSave() {};
