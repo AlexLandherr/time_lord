@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, FlatList } from "react-native";
 const LapList = ({lapTimeList}) => {
     const Item = ({lap}) => (
         <View style={styles.flatListItem}>
-            <Text>Lap time: {lap} seconds</Text>
+            <Text>Lap ID: {lap.id} - Lap time: {lap.laptime} seconds.</Text>
         </View>
     );
 

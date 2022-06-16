@@ -1,3 +1,5 @@
+import { deleteAll, findAll, insert } from "../database/localdb";
+
 export function toHoursMinutesSeconds(seconds) {
     let hrs = Math.floor(seconds / 3600);
     let mins = Math.floor((seconds - (hrs * 3600)) / 60);
@@ -35,14 +37,17 @@ export function handleStopTimer(intervalInUse, setIntervalInUse) {
 export function handleResetTimer(setTime, setClockStart, setLapTimeList) {
     setTime(0);
     setClockStart(0);
-    setLapTimeList([]);
+    deleteAll()
+        .then(res => setLapTimeList([]))
 };
 
-export function handleLapTime(intervalInUse, clockStart, setClockStart, lapTimeList, setLapTimeList) {
+export function handleLapTime(intervalInUse, clockStart, setClockStart, setLapTimeList) {
     if (intervalInUse && clockStart !== 0) {
         let lap = Math.round(((Date.now() - clockStart) / 1000)); //Rounding to nearest second.
         setClockStart(Date.now());
-        setLapTimeList(lapTimeList => [...lapTimeList, lap]);
+        insert(lap) //Write lap time to database and then to lapTime state.
+            .then(res => findAll())
+            .then(res => setLapTimeList(res.rows._array))
     } else if (intervalInUse && clockStart === 0) {
         return;
     };
